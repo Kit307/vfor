@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V-For</title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <!-- development version, includes helpful console warnings -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body style="background-color: #ffffff;">
+    <div id="app">
+        <div class="container mt-5">
+            <h1 class="text-warning">Form by Krit 6304101307</h1>
+        </div>
+        <form onsubmit="return false">
+            <div class="container mt-5 ">
+                <div class="row">
+                    <div class="mb-3 col-sm-12 col-md-6">
+                        <label for="stuName" class="form-label">Name</label>
+                        <input type="text" v-model="student.fname" @click="clickvalue.fname = true" class="form-control"
+                            id="srtName" required placeholder="Name" aria-describedby="emailHelp"
+                            v-bind:style="[  green(clickvalue.fname,checkvalueinput(student.fname)) ]">
+
+                        <div v-if="clickvalue.fname&& checkvalueinput(student.fname) " id="emailHelp"
+                            class="form-text text-danger">Please enter your name</div>
+                    </div>
+                    <div class="mb-3 col-sm-12 col-md-6">
+                        <label for="stuSur" class="form-label">Surname</label>
+                        <input type="text" v-model="student.lname" class="form-control" id="stuSur"
+                            placeholder="Surname" @click="clickvalue.lname = true"
+                            v-bind:style="[  green(clickvalue.lname,checkvalueinput(student.lname))]" required
+                            aria-describedby="emailHelp" id="srtName">
+
+                        <div id="emailHelp" v-if="clickvalue.lname&& checkvalueinput(student.lname)"
+                            class="form-text text-danger">Please enter your surname</div>
+                    </div>
+                    <div class="mb-3 col-sm-12 col-md-3">
+                        <!-- ID -->
+                        <label for="stuID" class="form-label">Student Code</label>
+                        <input type="text"
+                            oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                            maxlength="10" v-model="student.stdid" placeholder="6XXXXXXXXX" required
+                            class="form-control" id="stuID" @click="clickvalue.stdid = true"
+                            v-bind:style="[  green(clickvalue.stdid ,!(!checkvalueinput(student.stdid) && checklangeid(student.stdid) && checkvalueid(student.stdid)) )]"
+                            aria-describedby="emailHelp">
+
+
+                        <div v-if="clickvalue.stdid&& checkvalueinput(student.stdid)" class="form-text text-danger">
+                            Please enter your student code</div>
+                        <div v-if="clickvalue.stdid&& !checklangeid(student.stdid)" class="form-text text-danger">Please
+                            enter a full 10 digit code.</div>
+                        <div v-if="clickvalue.stdid&& !checkvalueid(student.stdid)" class="form-text text-danger">Please
+                            enter a student code that is not required.</div>
+
+                    </div>
+                    <div class="mb-3 col-sm-12 col-md-3">
+                        <label for="stuGPA" class="form-label">GPA</label>
+                        <input type="text"
+                            oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                            maxlength="4" v-model="student.gpa" placeholder="1.23" min="1" max="5" required
+                            class="form-control" id="" @click="clickvalue.gpa = true"
+                            v-bind:style="[  green(clickvalue.gpa,(clickvalue.gpa&& !checkvaluegpa(student.gpa)|| checkvalueinput(student.gpa) ))  ]"
+                            aria-describedby="emailHelp">
+                        <div id="emailHelp" v-if="clickvalue.gpa && checkvalueinput(student.gpa)"
+                            class="form-text text-danger">Please enter your gpa</div>
+                        <div id="emailHelp" v-if="clickvalue.gpa&& !checkvaluegpa(student.gpa)"
+                            class="form-text text-danger">Please enter a value greater than 0 or less
+                            than 4.</div>
+                    </div>
+
+                    <div class="mb-3 col-sm-12 col-md-6">
+                        <label for="exampleInputEmail1" class="form-label">Email address</label>
+                        <input type="email" v-model="student.eaddress" class="form-control" id="exampleInputEmail1"
+                            placeholder="abcdefg@xyzasdj.com" @click="clickvalue.eaddress = true"
+                            v-bind:style="[  green(clickvalue.eaddress,!(!checkvalueinput(student.eaddress)&&checkemail(student.eaddress) )) ]"
+                            required aria-describedby="emailHelp">
+
+                        <div id="emailHelp" v-if="clickvalue.eaddress&&checkvalueinput(student.eaddress)"
+                            class="form-text text-danger">Please enter your Email</div>
+                        <div id="emailHelp" v-if="clickvalue.eaddress&&!checkemail(student.eaddress)"
+                            class="form-text text-danger">@example.com</div>
+                    </div>
+                    <div class=" row d-flex justify-content-center">
+                        <button v-if="checkvalue(student.eaddress,student.stdid,student.gpa)" disabled type="submit"
+                            class="btn btn-outline-danger col-md-1 col-sm-2 ">Submit</button>
+                        <button v-else
+                            @click="addvalue(student.fname,student.lname,student.stdid,student.gpa,student.eaddress)"
+                            type="submit" class="btn btn-success col-md-1 col-sm-2 ">Submit</button>
+                    </div>
+                </div>
+            </div>
+
+
+        </form>
+        <div class="container mt-5 text-center">
+            <div class="table-responsive">
+                <table class="table table-striped ">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Surname</th>
+                            <th scope="col">Student Code</th>
+                            <th scope="col">GPA</th>
+                            <th scope="col" class="">Email address</th>
+                            <th scope="col"><button class="btn btn-outline-danger" @click="delete1(-1)">Delete All <i
+                                        class="fa fa-trash-o" style="font-size:26px"></i></button></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(i, index) in studentList">
+                            <th v-if="i.gpa < gpanana " v-bind:style="{color: 'red',fontWeight: 'bolder'}" scope="row">
+                                {{i.id}}</th>
+                            <th v-else scope="row">{{i.id}}</th>
+                            <td v-if="i.gpa < gpanana " v-bind:style="{color: 'red',fontWeight: 'bolder'}">{{i.fname}}
+                            </td>
+                            <td v-else>{{i.fname}}</td>
+                            <td v-if="i.gpa < gpanana " v-bind:style="{color: 'red',fontWeight: 'bolder'}">{{i.lname}}
+                            </td>
+                            <td v-else>{{i.lname}}</td>
+                            <td v-if="i.gpa < gpanana " v-bind:style="{color: 'red',fontWeight: 'bolder'}">{{i.stdid}}
+                            </td>
+                            <td v-else>{{i.stdid}}</td>
+                            <td v-if="i.gpa < gpanana " v-bind:style="{color: 'red',fontWeight: 'bolder'}">{{i.gpa}}
+                            </td>
+                            <td v-else>{{i.gpa}}</td>
+                            <td v-if="i.gpa < gpanana " v-bind:style="{color: 'red',fontWeight: 'bolder'}">
+                                {{i.eaddress}}</td>
+                            <td v-else>{{i.eaddress}}</td>
+                            <td><button class="btn btn-outline-danger" @click="delete1(i.id-1)"> <i
+                                        class="fa fa-trash-o" style="font-size:20px"></i></button></th>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="./js/app.js"></script>
+
+</html>
